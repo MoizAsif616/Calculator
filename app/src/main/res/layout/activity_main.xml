@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/main"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="#000000"
+  android:orientation="vertical"
+  android:weightSum="14">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/custom_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="?attr/colorPrimary"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    android:elevation="4dp"
+    android:paddingHorizontal="16dp"
+    android:gravity="center_vertical"
+    android:layout_weight="0.4">
+
+
+<!--    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
+    <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:orientation="horizontal"
+      android:gravity="center_vertical">
+
+      <!-- Left Icon -->
+      <ImageView
+        android:id="@+id/icon"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/calculator"
+        android:layout_gravity="center_vertical"
+        android:paddingEnd="8dp"/>
+      <!-- Title -->
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="Calculator"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:gravity="center_vertical"
+        android:textStyle="normal"/>
+    </LinearLayout>
+    <!-- Right-aligned text -->
+<!--    <TextView-->
+<!--      android:id="@+id/goo_text"-->
+<!--      android:layout_width="wrap_content"-->
+<!--      android:layout_height="match_parent"-->
+<!--      android:text="Goo"-->
+<!--      android:textSize="16sp"-->
+<!--      android:textColor="@color/white"-->
+<!--      android:gravity="center_vertical"-->
+<!--      android:layout_gravity="end"-->
+<!--      android:layout_marginEnd="15dp"/>-->
+  </androidx.appcompat.widget.Toolbar>
+  <!-- First LinearLayout -->
+  <LinearLayout
+    android:id="@+id/linear1"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1.6"
+    android:orientation="horizontal"
+    android:weightSum="2">
+    <LinearLayout
+      android:id="@+id/menubar"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal"
+      android:layout_marginBottom="20dp"
+      >
+      <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/menu"
+        android:padding="10dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="13dp"/>
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Standard"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="27dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="5dp"/>
+
+
+    </LinearLayout>
+  </LinearLayout>
+  <!-- Second LinearLayout -->
+  <LinearLayout
+    android:id="@+id/linear2"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="3"
+    android:background="#000000"
+    android:orientation="vertical"
+    android:weightSum="3">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:background="@drawable/border"
+      android:layout_marginLeft="5dp"
+      android:layout_marginRight="5dp">
+      <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/screen"
+        android:text="0"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="60sp"
+        android:textStyle="normal"
+        android:clickable="false"
+        android:focusable="false"
+        android:gravity="end|center_vertical"
+        android:cursorVisible="false"
+        android:paddingHorizontal="15dp"
+        />
+    </LinearLayout>
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_weight="2"
+      android:orientation="horizontal"
+      android:weightSum="6"
+      android:paddingHorizontal="4dp"
+      android:layout_marginTop="10dp">
+      <!-- MC -->
+      <TextView
+        android:id="@+id/mc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MC"
+        android:textSize="18sp"
+        android:textColor="?attr/colorOnPrimary"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_weight="1"
+        android:gravity="center"
+        />
+      <!-- MR -->
+      <TextView
+        android:id="@+id/mr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MR"
+        android:textSize="18sp"
+        android:textColor="?attr/colorOnPrimary"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_weight="1"
+        android:gravity="center" />
+      <!-- M+ -->
+      <TextView
+        android:id="@+id/mPlus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="M+"
+        android:textSize="18sp"
+        android:textColor="?attr/colorOnPrimary"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_weight="1"
+        android:gravity="center" />
+      <!-- M- -->
+      <TextView
+        android:id="@+id/mMinus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="M-"
+        android:textSize="18sp"
+        android:textColor="?attr/colorOnPrimary"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_weight="1"
+        android:gravity="center" />
+      <!-- MS -->
+      <TextView
+        android:id="@+id/ms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MS"
+        android:textSize="18sp"
+        android:textColor="?attr/colorOnPrimary"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="8dp"
+        android:layout_weight="1"
+        android:gravity="center" />
+      <!-- M= -->
+      <TextView
+        android:id="@+id/mEquals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="M="
+        android:textSize="18sp"
+        android:textColor="?attr/colorOnPrimary"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_weight="1"
+        android:gravity="center" />
+    </LinearLayout>
+
+  </LinearLayout>
+  <!-- Third LinearLayout -->
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1.5" />
+  <LinearLayout
+    android:id="@+id/buttonLayout"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="7.5"
+    android:orientation="vertical"
+    android:weightSum="5"
+    android:layout_marginTop="0dp">
+  </LinearLayout>
+
+
+</LinearLayout>
