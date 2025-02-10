@@ -1,29 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <!-- Base application theme. -->
-<!--  <style name="Theme.Calculator" parent="Theme.MaterialComponents.DayNight.DarkActionBar">-->
   <style name="Theme.Calculator" parent="Theme.MaterialComponents.DayNight.NoActionBar">
     <!-- Primary brand color. -->
-    <item name="colorPrimary">@color/black</item>
-    <item name="colorPrimaryVariant">@color/charcoal</item>
-    <item name="colorOnPrimary">@color/white</item>
+    <item name="colorPrimary">@color/white</item>
+    <item name="colorPrimaryVariant">@color/beige</item>
+    <item name="colorOnPrimary">@color/black</item>
     <!-- Secondary brand color. -->
     <item name="colorSecondary">@color/teal_200</item>
     <item name="colorSecondaryVariant">@color/teal_700</item>
     <item name="colorOnSecondary">@color/black</item>
-    <!-- Status bar color. -->
-<!--    <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>-->
-    <item name="android:statusBarColor">@color/black</item>
-    <!-- Customize your theme here. -->
-<!--    <item name="actionBarStyle">@style/MyActionBarStyle</item>-->
+    <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
   </style>
-
-<!--  <style name="MyActionBarStyle" parent="Widget.MaterialComponents.ActionBar.Solid">-->
-<!--    <item name="titleTextStyle">@style/MyActionBarTitleTextStyle</item>-->
-<!--&lt;!&ndash;    <item name="iconTint">@color/purple_700</item> &lt;!&ndash; Icon color &ndash;&gt;&ndash;&gt;-->
-<!--  </style>-->
-
-<!--  <style name="MyActionBarTitleTextStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">-->
-<!--    <item name="android:textColor">@color/black</item>-->
-<!--    <item name="android:textSize">20sp</item>-->
-<!--  </style>-->
 </resources>

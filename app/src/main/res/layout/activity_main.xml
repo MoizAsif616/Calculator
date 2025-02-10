@@ -4,7 +4,7 @@
   android:id="@+id/main"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="#000000"
+  android:background="?attr/colorPrimary"
   android:orientation="vertical"
   android:weightSum="14">
 
@@ -14,7 +14,7 @@
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    android:elevation="4dp"
+    android:elevation="0dp"
     android:paddingHorizontal="16dp"
     android:gravity="center_vertical"
     android:layout_weight="0.4">
@@ -41,21 +41,17 @@
         android:layout_height="match_parent"
         android:text="Calculator"
         android:textSize="24sp"
-        android:textColor="@color/white"
+        android:textColor="?attr/colorOnPrimary"
         android:gravity="center_vertical"
         android:textStyle="normal"/>
     </LinearLayout>
-    <!-- Right-aligned text -->
-<!--    <TextView-->
-<!--      android:id="@+id/goo_text"-->
-<!--      android:layout_width="wrap_content"-->
-<!--      android:layout_height="match_parent"-->
-<!--      android:text="Goo"-->
-<!--      android:textSize="16sp"-->
-<!--      android:textColor="@color/white"-->
-<!--      android:gravity="center_vertical"-->
-<!--      android:layout_gravity="end"-->
-<!--      android:layout_marginEnd="15dp"/>-->
+    <ImageView
+      android:id="@+id/themeicon"
+      android:layout_width="25dp"
+      android:layout_height="25dp"
+      android:layout_gravity="end"
+      android:layout_marginEnd="15dp"
+      android:src="@drawable/lightmodeicon" /> <!-- Default icon -->
   </androidx.appcompat.widget.Toolbar>
   <!-- First LinearLayout -->
   <LinearLayout
@@ -98,7 +94,6 @@
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="3"
-    android:background="#000000"
     android:orientation="vertical"
     android:weightSum="3">
 
@@ -122,6 +117,7 @@
         android:gravity="end|center_vertical"
         android:cursorVisible="false"
         android:paddingHorizontal="15dp"
+        android:background="@null" /> <!-- to remove underline -->
         />
     </LinearLayout>
     <LinearLayout

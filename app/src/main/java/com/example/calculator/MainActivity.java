@@ -21,6 +21,13 @@ import android.content.res.TypedArray;
 import android.content.Context;
 import androidx.core.content.ContextCompat; // For getColor()
 import com.google.android.material.color.MaterialColors;
+import android.widget.ImageView; // For ImageView
+import android.graphics.drawable.Drawable; // If needed for setting images
+import android.view.View; // For setOnClickListener
+import android.content.res.Configuration;
+import androidx.appcompat.app.AppCompatDelegate;
+import android.view.MenuItem;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -61,8 +68,10 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
     // Set the layout for the activity
     setContentView(R.layout.activity_main);
+    switchTheme();
 //    LinearLayout buttonLayout = findViewById(R.id.buttonLayout);
 
     // 2D array representing rows of buttons
@@ -109,5 +118,26 @@ public class MainActivity extends AppCompatActivity {
   }
   private void calculateResult() {
     // Handle calculation logic
+  }
+
+  private void switchTheme(){
+    ImageView themeSwitchIcon = findViewById(R.id.themeicon);
+    // Set initial icon based on current theme
+    int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+    if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+      themeSwitchIcon.setImageResource(R.drawable.lightmodeicon); // Dark mode is active, show light icon
+    } else {
+      themeSwitchIcon.setImageResource(R.drawable.darkmodeicon); // Light mode is active, show dark icon
+    }
+
+    // Handle icon click to toggle theme
+    themeSwitchIcon.setOnClickListener(v -> {
+      if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO); // Switch to light mode
+      } else {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES); // Switch to dark mode
+      }
+      recreate(); // Restart activity to apply new theme
+    });
   }
 }
