@@ -7,6 +7,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.view.MotionEvent;
 import android.widget.LinearLayout;
 import android.widget.Button;
 import android.widget.TextView;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
       buttonColor = MaterialColors.getColor(button, com.google.android.material.R.attr.colorPrimaryVariant);
     }
     else {
-      buttonColor = MaterialColors.getColor(button, com.google.android.material.R.attr.colorOnPrimary);
+      buttonColor = MaterialColors.getColor(button, com.google.android.material.R.attr.colorSecondary);
     }
     // Create a rounded drawable programmatically
     GradientDrawable shape = new GradientDrawable();
@@ -62,16 +63,32 @@ public class MainActivity extends AppCompatActivity {
     shape.setColor(buttonColor); // Background color
 
     button.setBackground(shape);
-//    button.setOnClickListener(v -> handleButtonClick(label));
+    // Add OnTouchListener
+    button.setOnTouchListener((v, event) -> {
+      GradientDrawable btnShape = (GradientDrawable) button.getBackground();
+      switch (event.getAction()) {
+        case MotionEvent.ACTION_DOWN: // Button pressed
+          if (!label.equals("=")) {
+            btnShape.setColor(MaterialColors.getColor(button, com.google.android.material.R.attr.colorPrimary));
+          } else {
+            btnShape.setColor(MaterialColors.getColor(button, com.google.android.material.R.attr.colorSecondaryVariant));
+          }
+          break;
+        case MotionEvent.ACTION_UP: // Button released
+          btnShape.setColor(buttonColor); // Reset to original color
+          break;
+      }
+      return false;
+    });
     return button;
   }
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES); // Force dark theme
     // Set the layout for the activity
     setContentView(R.layout.activity_main);
-    switchTheme();
+//    switchTheme();
 //    LinearLayout buttonLayout = findViewById(R.id.buttonLayout);
 
     // 2D array representing rows of buttons
@@ -97,11 +114,12 @@ public class MainActivity extends AppCompatActivity {
 
       for(String label : row) {
         Button button = createButton(label);
-        if(label != "=")
-        {
+        if (label.equals("CE") || label.equals("C") || label.equals("⌫") || label.equals("÷") ||
+            label.equals("×") || label.equals("−") || label.equals("+")) {
+          button.setTextColor(MaterialColors.getColor(button, com.google.android.material.R.attr.colorSecondary));
+        } else if (!label.equals("=")) {
           button.setTextColor(MaterialColors.getColor(button, com.google.android.material.R.attr.colorOnPrimary));
-        }
-        else {
+        } else {
           button.setTextColor(MaterialColors.getColor(button, com.google.android.material.R.attr.colorPrimary));
         }
         rowLayout.addView(button);
@@ -120,24 +138,24 @@ public class MainActivity extends AppCompatActivity {
     // Handle calculation logic
   }
 
-  private void switchTheme(){
-    ImageView themeSwitchIcon = findViewById(R.id.themeicon);
-    // Set initial icon based on current theme
-    int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-    if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
-      themeSwitchIcon.setImageResource(R.drawable.lightmodeicon); // Dark mode is active, show light icon
-    } else {
-      themeSwitchIcon.setImageResource(R.drawable.darkmodeicon); // Light mode is active, show dark icon
-    }
-
-    // Handle icon click to toggle theme
-    themeSwitchIcon.setOnClickListener(v -> {
-      if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO); // Switch to light mode
-      } else {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES); // Switch to dark mode
-      }
-      recreate(); // Restart activity to apply new theme
-    });
-  }
+//  private void switchTheme(){
+//    ImageView themeSwitchIcon = findViewById(R.id.themeicon);
+//    // Set initial icon based on current theme
+//    int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+//    if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+//      themeSwitchIcon.setImageResource(R.drawable.lightmodeicon); // Dark mode is active, show light icon
+//    } else {
+//      themeSwitchIcon.setImageResource(R.drawable.darkmodeicon); // Light mode is active, show dark icon
+//    }
+//
+//    // Handle icon click to toggle theme
+//    themeSwitchIcon.setOnClickListener(v -> {
+//      if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO); // Switch to light mode
+//      } else {
+//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES); // Switch to dark mode
+//      }
+//      recreate(); // Restart activity to apply new theme
+//    });
+//  }
 }

@@ -14,4 +14,6 @@
   <color name="charcoal">#1E1E1E</color>"
   <color name="golden">#ffdf00</color>"
   <color name="pale_yellow"> #FDFF86 </color>"
+  <color name="carrot"> #ED7117 </color>"
+  <color name="orange"> #DD571C </color>"
 </resources>
