@@ -89,9 +89,7 @@ public class MainActivity extends AppCompatActivity {
     // Set the layout for the activity
     setContentView(R.layout.activity_main);
 //    switchTheme();
-//    LinearLayout buttonLayout = findViewById(R.id.buttonLayout);
 
-    // 2D array representing rows of buttons
     String[][] buttonLabels = {
         {"CE", "C", "⌫", "÷"},
         {"7", "8", "9", "×"},
