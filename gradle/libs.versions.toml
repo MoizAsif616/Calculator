@@ -7,15 +7,19 @@ appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.10.0"
 constraintlayout = "2.2.0"
+matheclipseCore = "2.0.0"
+mathparserOrgMxparserVersion = "5.2.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+mariuszgromada-mathparser-org-mxparser = { module = "org.mariuszgromada.math:MathParser.org-mXparser", version.ref = "mathparserOrgMxparserVersion" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+matheclipse-core = { module = "org.matheclipse:matheclipse-core", version.ref = "matheclipseCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

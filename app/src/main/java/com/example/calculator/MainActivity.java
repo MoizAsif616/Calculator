@@ -1,5 +1,10 @@
 package com.example.calculator;
 
+import org.matheclipse.core.eval.ExprEvaluator;
+import org.matheclipse.core.interfaces.IExpr;
+
+import org.mariuszgromada.math.mxparser.Expression;
+
 import android.os.Bundle;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,6 +12,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
 import android.widget.Button;
@@ -63,6 +69,11 @@ public class MainActivity extends AppCompatActivity {
     shape.setColor(buttonColor); // Background color
 
     button.setBackground(shape);
+
+    // Add OnClickListener
+    button.setOnClickListener(v -> {
+      appendToScreen(label);
+    });
     // Add OnTouchListener
     button.setOnTouchListener((v, event) -> {
       GradientDrawable btnShape = (GradientDrawable) button.getBackground();
@@ -125,35 +136,131 @@ public class MainActivity extends AppCompatActivity {
       mainLayout.addView(rowLayout);
     }
   }
+  private boolean isResultDisplayed = false;
   private void appendToScreen(String value) {
-    EditText screen = findViewById(R.id.screen);
-    screen.setText(screen.getText().toString() + value);
+    TextView screen = findViewById(R.id.screen);
+    String currentText = screen.getText().toString();
+
+    if (value.equals("C")) {
+      screen.setText("0"); // Reset to `0`
+      updateTextSize(screen, 1); // Reset text size
+      isResultDisplayed = false;
+    } else if (value.equals("CE")) {
+      if(isResultDisplayed)
+      {
+        screen.setText("0");
+        updateTextSize(screen, 1);
+      }
+      else if (!currentText.isEmpty()) {
+        int lastSpace = currentText.lastIndexOf(" ");
+        if (lastSpace != -1) {
+          String newText = currentText.substring(0, lastSpace);
+          screen.setText(newText.isEmpty() ? "0" : newText);
+          updateTextSize(screen, newText.length()); // Update text size
+        } else {
+          screen.setText("0"); // If only one number, reset to `0`
+          updateTextSize(screen, 1); // Reset text size
+        }
+      }
+    } else if (value.equals("⌫")) {
+      if (!currentText.isEmpty()) {
+        String newText = currentText.substring(0, currentText.length() - 1);
+        screen.setText(newText.isEmpty() ? "0" : newText);
+        updateTextSize(screen, newText.length());
+        isResultDisplayed = false;
+      }
+    } else if (value.equals("=")) {
+      // cal the calculateExpression function and display the result
+      String formattedExpression = formatExpressionForParser(currentText);
+      String result = calculateExpression(formattedExpression);
+      screen.setText(result); // Show only the result
+      Log.d("Result", result);
+      updateTextSize(screen, result.length()); // Update text size
+    } else if (value.equals("1/L")) {
+      // Find the last entered number
+      if (currentText.length() <= 13)
+      {
+        if (isResultDisplayed) {
+          isResultDisplayed = false; // Continue calculation
+        }
+        String updatedText = applyReciprocal(currentText);
+        screen.setText(updatedText);
+        updateTextSize(screen, updatedText.length());
+      } // Update text size
+    }else if ((value.equals("+") || value.equals("-") || value.equals("×") || value.equals("÷")) && isResultDisplayed) {
+      isResultDisplayed = false;
+      screen.append(value);
+    }
+    else { // Number input
+      if (isResultDisplayed) {
+        screen.setText(value); // Start fresh if result was displayed
+        isResultDisplayed = false;
+      } else {
+        if (currentText.equals("0")) {
+          screen.setText(value);
+        } else {
+          screen.append(value);
+        }
+      }
+      updateTextSize(screen, screen.getText().length());
+    }
   }
-  private void performOperation(String operator) {
-    // Handle operator logic
+  private void updateTextSize(TextView screen, int length) {
+    if (length <= 12) {
+      screen.setTextSize(TypedValue.COMPLEX_UNIT_SP, 55); // Default size
+    } else if (length > 12 && length <= 17) {
+      screen.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40); // Smaller size
+    }
   }
-  private void calculateResult() {
-    // Handle calculation logic
+  private String formatExpressionForParser(String input) {
+    return input
+        .replace("×", " * ")
+        .replace("÷", " / ")
+        .replace("+", " + ")
+        .replace("−", " - ");
+  }
+  private String calculateExpression(String input) {
+    Expression expression = new Expression(input);
+    double result = expression.calculate();
+
+    if (Double.isNaN(result)) {
+      isResultDisplayed = false;
+      return "Error";
+    }
+
+    isResultDisplayed = true;
+    String resultStr = (result == (int) result) ? String.valueOf((int) result) : String.valueOf(result);
+
+    // If result exceeds 17 characters
+    if (resultStr.length() > 17) {
+      if (resultStr.contains(".")) {
+        return resultStr.substring(0, 17); // Trim floating-point numbers
+      } else {
+        return String.format("%.6e", result); // Convert integers to scientific notation
+      }
+    }
+    return resultStr;
   }
 
-//  private void switchTheme(){
-//    ImageView themeSwitchIcon = findViewById(R.id.themeicon);
-//    // Set initial icon based on current theme
-//    int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-//    if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
-//      themeSwitchIcon.setImageResource(R.drawable.lightmodeicon); // Dark mode is active, show light icon
-//    } else {
-//      themeSwitchIcon.setImageResource(R.drawable.darkmodeicon); // Light mode is active, show dark icon
-//    }
-//
-//    // Handle icon click to toggle theme
-//    themeSwitchIcon.setOnClickListener(v -> {
-//      if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
-//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO); // Switch to light mode
-//      } else {
-//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES); // Switch to dark mode
-//      }
-//      recreate(); // Restart activity to apply new theme
-//    });
-//  }
+
+  private String applyReciprocal(String expression) {
+    if (expression.isEmpty()) return expression;
+
+    // Find the last number in the expression
+    int lastOperatorIndex = -1;
+    for (int i = expression.length() - 1; i >= 0; i--) {
+      char c = expression.charAt(i);
+      if (!Character.isDigit(c) && c != '.') {
+        lastOperatorIndex = i;
+        break;
+      }
+    }
+
+    String lastNumber = expression.substring(lastOperatorIndex + 1); // Extract the last number
+    if (lastNumber.isEmpty()) return expression; // If no number, return as is
+
+    // Replace the last number with its reciprocal
+    String newExpression = expression.substring(0, lastOperatorIndex + 1) + "1/(" + lastNumber + ")";
+    return newExpression;
+  }
 }

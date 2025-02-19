@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.Packaging
+
 plugins {
     alias(libs.plugins.android.application)
 }
@@ -29,10 +31,15 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    packaging {
+        resources.excludes.add("**/*.xsd")
+    }
 }
 
 dependencies {
-
+    implementation(libs.mariuszgromada.mathparser.org.mxparser)
+    implementation(libs.matheclipse.core)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
