@@ -11,9 +11,12 @@
   <color name="beige_dark">#D2B48C</color>
   <color name="grey_700">#616161</color>
   <color name="grey_900">#212121</color>
-  <color name="charcoal">#1E1E1E</color>"
+  <color name="charcoal">#28231d</color>"
   <color name="golden">#ffdf00</color>"
   <color name="pale_yellow"> #FDFF86 </color>"
   <color name="carrot"> #ED7117 </color>"
   <color name="orange"> #DD571C </color>"
+  <color name="mid_night"> #040406 </color>"
+  <color name="licorice"> #1a1110 </color>"
+  <color name="rasin_black"> #1A1613 </color>"
 </resources>

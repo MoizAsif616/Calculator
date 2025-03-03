@@ -96,7 +96,11 @@
       <TextView
         android:id="@+id/answer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:textSize="25sp"
+        android:gravity="end"
+        android:textColor="@color/grey_700"
+        android:paddingHorizontal="15dp"/>
 
     </LinearLayout>
   </LinearLayout>
@@ -217,14 +221,12 @@
         android:textColor="@color/grey_700"
         android:textSize="18sp" />
     </LinearLayout>
-
   </LinearLayout>
   <!-- Third LinearLayout -->
 <!--  <View-->
 <!--    android:layout_width="match_parent"-->
 <!--    android:layout_height="0dp"-->
 <!--    android:layout_weight="1.5" />-->
-
   <LinearLayout
     android:id="@+id/buttonLayout"
     android:layout_width="match_parent"
@@ -239,9 +241,17 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:visibility="gone"
-      android:backgroundTint="?attr/colorPrimaryVariant">
-
+      android:background="?attr/colorPrimaryVariant">
+      <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+          android:id="@+id/memoryLayout"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="vertical">
+        </LinearLayout>
+      </ScrollView>
     </RelativeLayout>
   </LinearLayout>
-
 </LinearLayout>

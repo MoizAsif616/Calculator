@@ -1,24 +1,30 @@
 package com.example.calculator;
+import com.example.calculator.R;
 import org.mariuszgromada.math.mxparser.Expression;
+import org.w3c.dom.Text;
+import java.util.ArrayList;
+import java.util.Objects;
+
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.util.TypedValue;
 import android.graphics.drawable.GradientDrawable;
 import android.content.Context;
 import com.google.android.material.color.MaterialColors;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
-  private int getThemeColor(Context context, int attributeId) {
-    TypedValue typedValue = new TypedValue();
-    context.getTheme().resolveAttribute(attributeId, typedValue, true);
-    return typedValue.data;
-  }
   private Button createButton(String label) {
     Button button = new Button(this);
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -26,27 +32,26 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout.LayoutParams.MATCH_PARENT,
         1
     );
-    params.setMargins(15, 15, 15, 15);
+    params.setMargins(5, 5, 5, 5);
     button.setLayoutParams(params);
     button.setText(label);
     if (label.equals("1/x") || label.equals("x²") || label.equals("²√x") || label.equals("+/-")) {
-      button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+      button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
     }
     else{
-      button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
+      button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23);
     }
     int buttonColor;
     if (label != "=")
     {
       buttonColor = MaterialColors.getColor(button, com.google.android.material.R.attr.colorPrimaryVariant);
     }
-    else {
+    else
       buttonColor = MaterialColors.getColor(button, com.google.android.material.R.attr.colorSecondary);
-    }
     // Create a rounded drawable programmatically
     GradientDrawable shape = new GradientDrawable();
     shape.setShape(GradientDrawable.RECTANGLE);
-    shape.setCornerRadius(20); // Set rounded corners
+    shape.setCornerRadius(10); // Set rounded corners
     shape.setColor(buttonColor); // Background color
 
     button.setBackground(shape);
@@ -56,30 +61,30 @@ public class MainActivity extends AppCompatActivity {
       appendToScreen(label);
     });
     // Add OnTouchListener
-    button.setOnTouchListener((v, event) -> {
-      GradientDrawable btnShape = (GradientDrawable) button.getBackground();
-      switch (event.getAction()) {
-        case MotionEvent.ACTION_DOWN: // Button pressed
-          if (!label.equals("=")) {
-            btnShape.setColor(MaterialColors.getColor(button, com.google.android.material.R.attr.colorPrimary));
-          } else {
-            btnShape.setColor(MaterialColors.getColor(button, com.google.android.material.R.attr.colorSecondaryVariant));
-          }
-          break;
-        case MotionEvent.ACTION_UP: // Button released
-          btnShape.setColor(buttonColor); // Reset to original color
-          break;
+    button.setOnTouchListener(new View.OnTouchListener() {
+      @Override
+      public boolean onTouch(View v, MotionEvent event) {
+        GradientDrawable btnShape = (GradientDrawable) button.getBackground();
+        switch (event.getAction()) {
+          case MotionEvent.ACTION_DOWN: // Button pressed
+            if (!label.equals("=")) {
+              btnShape.setColor(MaterialColors.getColor(button, com.google.android.material.R.attr.colorPrimary));
+            } else {
+              btnShape.setColor(MaterialColors.getColor(button, com.google.android.material.R.attr.colorSecondaryVariant));
+            }
+            break;
+          case MotionEvent.ACTION_UP: // Button released
+            btnShape.setColor(buttonColor); // Reset to original color
+            break;
+        }
+        return false;
       }
-      return false;
     });
-    return button;
-  }
-//  TextView mc = findViewById(R.id.mc);
-//  TextView mr = findViewById(R.id.mr);
-//  TextView mPlus = findViewById(R.id.mPlus);
-//  TextView mMinus = findViewById(R.id.mMinus);
-//  TextView ms = findViewById(R.id.ms);
-//  TextView mDropdown = findViewById(R.id.mdropdown);
+      return button;
+    }
+
+
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -87,14 +92,27 @@ public class MainActivity extends AppCompatActivity {
     // Set the layout for the activity
     setContentView(R.layout.activity_main);
 
-
+    TextView mc = findViewById(R.id.mc);
+    TextView mr = findViewById(R.id.mr);
+    TextView mPlus = findViewById(R.id.mPlus);
+    TextView mMinus = findViewById(R.id.mMinus);
+    TextView ms = findViewById(R.id.ms);
+    TextView mDropdown = findViewById(R.id.mdropdown);
     // Set OnClickListeners
-//    mc.setOnClickListener(v -> onMcClicked());
-//    mr.setOnClickListener(v -> onMrClicked());
-//    mPlus.setOnClickListener(v -> onMPlusClicked());
-//    mMinus.setOnClickListener(v -> onMMinusClicked());
-//    ms.setOnClickListener(v -> onMsClicked());
-//    mDropdown.setOnClickListener(v -> onMDropdownClicked());
+    mc.setOnClickListener(v -> onMcClicked(mc, mr, mDropdown));
+    mr.setOnClickListener(v -> onMrClicked());
+    mPlus.setOnClickListener(v -> onMPlusClicked(mc, mr, mDropdown));
+    mMinus.setOnClickListener(v -> onMMinusClicked(mc, mr, mDropdown));
+    ms.setOnClickListener(v -> onMsClicked(mc, mr, mDropdown));
+    mDropdown.setOnClickListener(v -> onMDropdownClicked());
+
+    // Add OnTouchListener for all buttons
+//    setupButtonTouchListener(mc);
+//    setupButtonTouchListener(mr);
+//    setupButtonTouchListener(mPlus);
+//    setupButtonTouchListener(mMinus);
+//    setupButtonTouchListener(ms);
+//    setupButtonTouchListener(mDropdown);
 
     String[][] buttonLabels = {
         {"%", "CE", "C", "⌫"},
@@ -132,12 +150,35 @@ public class MainActivity extends AppCompatActivity {
       mainLayout.addView(rowLayout);
     }
   }
-  TextView screen = findViewById(R.id.screen);
+  // Helper method to set up touch listeners
+//  private void setupButtonTouchListener(TextView button) {
+//    button.setOnTOuchListener(new View.OnTouchListener() {
+//      @Override
+//      public boolean onTouch(View v, MotionEvent event) {
+//        int currentTextColor = button.getCurrentTextColor();
+//        switch (event.getAction()) {
+//          case MotionEvent.ACTION_DOWN: // Button pressed
+//            button.setTextColor(ContextCompat.getColor(this, R.color.grey_700)); // Change to grey_700
+//            break;
+//          case MotionEvent.ACTION_UP: // Button released
+//            button.setTextColor(MaterialColors.getColor(button, com.google.android.material.R.attr.colorOnPrimary)); // Revert to default color
+//            break;
+//        }
+//        return false; // Let the event propagate
+//      }
+//    });
+//  }
+  private ArrayList<String> memory = new ArrayList<>();
   private boolean isResultDisplayed = false;
   private boolean isErrorDisplayed = false;
+  private boolean isMemoryDisplayed = false;
   private void appendToScreen(String value) {
-
+    TextView screen = findViewById(R.id.screen);
+    TextView answer = findViewById(R.id.answer);
     String currentText = screen.getText().toString();
+    if (currentText.length() >= 17 && !(value.equals("C") || value.equals("CE") || value.equals("⌫"))) {
+      return;
+    }
     if (isErrorDisplayed) {
       if (value.equals("+") || value.equals("-") || value.equals("×") || value.equals("÷")) {
         String val = "0" + value;
@@ -190,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
       isResultDisplayed = false;
       isErrorDisplayed = false;
       updateTextSize(screen, screen.getText().length());
+      showAnswer(screen.getText().toString(), value);
       return;
     }
 
@@ -209,14 +251,7 @@ public class MainActivity extends AppCompatActivity {
           return; // Do nothing if the last character is a bracket
         }
         // Find the last operator position
-        int lastOperatorIndex = -1;
-        for (int i = currentText.length() - 1; i >= 0; i--) {
-          char c = currentText.charAt(i);
-          if (c == '+' || c == '−' || c == '×' || c == '÷') {
-            lastOperatorIndex = i;
-            break;
-          }
-        }
+        int lastOperatorIndex = findLastOperatorIndex(currentText);
         if (lastOperatorIndex != -1) {
           String newText = currentText.substring(0, lastOperatorIndex + 1);
           screen.setText(newText);
@@ -279,8 +314,9 @@ public class MainActivity extends AppCompatActivity {
           screen.append(value);
         }
       }
-      updateTextSize(screen, screen.getText().length());
     }
+    updateTextSize(screen, screen.getText().length());
+    showAnswer(screen.getText().toString(), value);
   }
   private String handleSquare(String expression) {
     if (expression.isEmpty()) return expression;
@@ -297,45 +333,56 @@ public class MainActivity extends AppCompatActivity {
   private String handleSquareRoot(String expression) {
     if (expression.isEmpty()) return expression;
 
-    // Find the last number in the expression
-    int lastOperatorIndex = -1;
-    for (int i = expression.length() - 1; i >= 0; i--) {
-      char c = expression.charAt(i);
-      if (!Character.isDigit(c) && c != '.') {
-        lastOperatorIndex = i;
-        break;
-      }
-    }
+    int lastOperatorIndex = findLastOperatorIndex(expression);
 
-    String lastNumber = expression.substring(lastOperatorIndex + 1); // Extract the last number
+    String lastNumber = expression.substring(lastOperatorIndex + 1);
+
     if (lastNumber.isEmpty()) return expression; // If no number, return as is
 
-    // Replace the last number with √(value)
-    String newExpression = expression.substring(0, lastOperatorIndex + 1) + "√(" + lastNumber + ")";
-    return newExpression;
+    // Check if the last number is already a square root
+    if (lastNumber.startsWith("√(") && lastNumber.endsWith(")")) {
+      String newExpression = expression.substring(0, lastOperatorIndex + 1) + "√(" + lastNumber + ")";
+      return newExpression;
+    } else {
+      String newExpression = expression.substring(0, lastOperatorIndex + 1) + "√(" + lastNumber + ")";
+      return newExpression;
+    }
   }
   private void handlePercentage(TextView screen) {
     String currentText = screen.getText().toString();
+
     if (currentText.matches("\\d+(\\.\\d+)?")) { // Single number case
       double value = Double.parseDouble(currentText) / 100;
       screen.setText(String.valueOf(value));
-    } else {
-      int lastOperatorIndex = findLastOperatorIndex(currentText);
-      if (lastOperatorIndex != -1) {
-        String beforeOperator = currentText.substring(0, lastOperatorIndex);
-        String lastNumber = currentText.substring(lastOperatorIndex + 1);
+      return;
+    }
 
-        String evaluatedResult = calculateExpression(formatExpressionForParser(beforeOperator));
-        if (!evaluatedResult.equals("Error")) {
-          double percentageValue = (Double.parseDouble(lastNumber) / 100) * Double.parseDouble(evaluatedResult);
-          String pv = (percentageValue == (int) percentageValue) ? String.valueOf((int) percentageValue) : String.valueOf(percentageValue);
-          char lastOperator = currentText.charAt(lastOperatorIndex);
-          String newExpression = beforeOperator + lastOperator + pv;
-          screen.setText(newExpression);
+    int lastOperatorIndex = findLastOperatorIndex(currentText);
+    if (lastOperatorIndex != -1) {
+      String beforeOperator = currentText.substring(0, lastOperatorIndex);
+      String lastNumber = currentText.substring(lastOperatorIndex + 1);
+
+      boolean hasBrackets = lastNumber.startsWith("(") && lastNumber.endsWith(")");
+      if (hasBrackets) {
+        lastNumber = lastNumber.substring(1, lastNumber.length() - 1); // Remove brackets
+      }
+
+      String evaluatedResult = calculateExpression(formatExpressionForParser(beforeOperator));
+      if (!evaluatedResult.equals("Error")) {
+        double percentageValue = (Double.parseDouble(lastNumber) / 100) * Double.parseDouble(evaluatedResult);
+        String pv = (percentageValue == (int) percentageValue) ? String.valueOf((int) percentageValue) : String.valueOf(percentageValue);
+
+        if (hasBrackets) {
+          pv = "(" + pv + ")"; // Re-enclose in brackets
         }
+
+        char lastOperator = currentText.charAt(lastOperatorIndex);
+        String newExpression = beforeOperator + lastOperator + pv;
+        screen.setText(newExpression);
       }
     }
   }
+
   private int findLastOperatorIndex(String expression) {
     for (int i = expression.length() - 1; i >= 0; i--) {
       char c = expression.charAt(i);
@@ -349,7 +396,7 @@ public class MainActivity extends AppCompatActivity {
     if (length <= 12) {
       screen.setTextSize(TypedValue.COMPLEX_UNIT_SP, 55); // Default size
     } else if (length > 12 && length <= 17) {
-      screen.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40); // Smaller size
+      screen.setTextSize(TypedValue.COMPLEX_UNIT_SP, 35); // Smaller size
     }
   }
   private String formatExpressionForParser(String input) {
@@ -393,14 +440,7 @@ public class MainActivity extends AppCompatActivity {
     if (expression.isEmpty()) return expression;
 
     // Find the last number in the expression
-    int lastOperatorIndex = -1;
-    for (int i = expression.length() - 1; i >= 0; i--) {
-      char c = expression.charAt(i);
-      if (!Character.isDigit(c) && c != '.') {
-        lastOperatorIndex = i;
-        break;
-      }
-    }
+    int lastOperatorIndex = findLastOperatorIndex(expression);
 
     String lastNumber = expression.substring(lastOperatorIndex + 1); // Extract the last number
     if (lastNumber.isEmpty()) return expression; // If no number, return as is
@@ -429,24 +469,114 @@ public class MainActivity extends AppCompatActivity {
     }
     return expression;
   }
+  private void showAnswer(String expression, String label) {
+
+    TextView answerTextView = findViewById(R.id.answer);
+    // Handle clear (C) label
+    if (label.equals("C")) {
+      answerTextView.setText(""); // Clear the TextView
+      return;
+    }
+    String formattedExpression = formatExpressionForParser(expression);
+    String result = calculateExpression(formattedExpression);
+    if (result.equals("Error")) {
+      answerTextView.setText("error"); // Display error message
+      return;
+    }
+    answerTextView.setText(result);
+  }
 
   //Memory function
-  private void onMcClicked() {
-    // Implement MC functionality here
+  private void onMcClicked(TextView mc, TextView mr, TextView mDropdown) {
+    updateButtonColor(mc, mr, mDropdown, false);
   }
   private void onMrClicked() {
-    // Implement MR functionality here
+    if (!memory.isEmpty()){
+      TextView screen = findViewById(R.id.screen);
+      screen.setText(memory.get(memory.size() - 1));
+      isResultDisplayed = true;
+    }
   }
-  private void onMPlusClicked() {
-    // Implement M+ functionality here
+  private void onMPlusClicked(TextView mc, TextView mr, TextView mDropdown) {
+    TextView screen = findViewById(R.id.screen);
+    String currentText = screen.getText().toString();
+    String result = calculateExpression(formatExpressionForParser(currentText));
+    if(!Objects.equals(result, "Error")){
+      if (memory.isEmpty()){
+        memory.add(result);
+      }
+      else{
+        String finalResilt = calculateExpression(formatExpressionForParser(memory.get(memory.size() - 1) + "+" + result));
+        memory.set(memory.size() - 1, finalResilt);
+      }
+      updateButtonColor(mc, mr, mDropdown, true);
+      Log.d("Memory", memory.toString());
+    }
   }
-  private void onMMinusClicked() {
-    // Implement M- functionality here
+  private void onMMinusClicked(TextView mc, TextView mr, TextView mDropdown) {
+    TextView screen = findViewById(R.id.screen);
+    String currentText = screen.getText().toString();
+    String result = calculateExpression(formatExpressionForParser(currentText));
+    if(!Objects.equals(result, "Error")){
+      if (memory.isEmpty()){
+        if (result.charAt(0) == '-'){
+          memory.add(result.substring(1));
+        }
+        else{
+          memory.add("-" + result);
+        }
+      }
+      else{
+        String finalResilt = calculateExpression(formatExpressionForParser(memory.get(memory.size() - 1) + "-" + result));
+        memory.set(memory.size() - 1, finalResilt);
+      }
+      updateButtonColor(mc, mr, mDropdown, true);
+      Log.d("Memory", memory.toString());
+    }
   }
-  private void onMsClicked() {
-//    mDropdown.setTextColor(MaterialColors.getColor(mDropdown, com.google.android.material.R.attr.colorOnPrimary));
+  private void onMsClicked(TextView mc, TextView mr, TextView mDropdown) {
+    TextView screen = findViewById(R.id.screen);
+    String currentText = screen.getText().toString();
+    String result = calculateExpression(formatExpressionForParser(currentText));
+    if(!Objects.equals(result, "Error")){
+      memory.add(result);
+      Log.d("Memory", memory.toString());
+      updateButtonColor(mc, mr, mDropdown, true);
+    }
   }
   private void onMDropdownClicked() {
-    // Implement M▼ functionality here
+    RelativeLayout mem = findViewById(R.id.memory);
+    if (isMemoryDisplayed){
+      mem.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_down));
+      new Handler().postDelayed(new Runnable() {
+        @Override
+        public void run() {
+          mem.setVisibility(View.GONE);
+        }
+      }, 500); // 1000 milliseconds = 1 second
+
+      isMemoryDisplayed = false;
+    }
+    else if(!memory.isEmpty()){
+      mem.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_up));
+      mem.setVisibility(View.VISIBLE);
+      isMemoryDisplayed = true;
+    }
+  }
+  private void updateButtonColor(TextView textView1, TextView textView2, TextView textView3, boolean useColorOnPrimary) {
+    int color;
+
+    if (useColorOnPrimary) {
+      // Use colorOnPrimary from the theme
+      color = MaterialColors.getColor(textView1, com.google.android.material.R.attr.colorOnPrimary);
+    } else {
+      // Use grey_700 from resources
+      color = ContextCompat.getColor(this, R.color.grey_700);
+    }
+
+    // Set the text color for all three TextViews
+    textView1.setTextColor(color);
+    textView2.setTextColor(color);
+    textView3.setTextColor(color);
   }
 }
